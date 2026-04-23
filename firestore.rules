@@ -1,0 +1,148 @@
+// firestore-rules/firestore.rules
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helper functions ──────────────────────────────────────────────────
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getRole() {
+      return request.auth.token.role;
+    }
+
+    function hasRole(role) {
+      return isAuthenticated() && getRole() == role;
+    }
+
+    function hasAnyRole(roles) {
+      return isAuthenticated() && getRole() in roles;
+    }
+
+    function hasPermission(permission) {
+      return isAuthenticated()
+        && permission in request.auth.token.permissions;
+    }
+
+    function isSuperAdmin() {
+      return hasRole('superadmin');
+    }
+
+    function isAdmin() {
+      return hasAnyRole(['superadmin', 'admin']);
+    }
+
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+
+    function isValidUserUpdate() {
+      // Prevent clients from escalating their own role
+      let allowed = ['displayName', 'updatedAt', 'metadata', 'lastLoginAt', 'phoneNumber'];
+      return request.resource.data.diff(resource.data).affectedKeys()
+        .hasOnly(allowed);
+    }
+
+    // ── Users collection ──────────────────────────────────────────────────
+
+    match /users/{uid} {
+      // Anyone can read their own profile; admins can read all
+      allow read: if isOwner(uid) || isAdmin();
+
+      // Admins can create user profiles; individuals are created via server/auto-provisioning
+      allow create: if (isAdmin() && hasPermission('users:write'));
+
+      // User can update only safe fields; admins can update freely
+      allow update: if
+        (isOwner(uid) && isValidUserUpdate()) ||
+        (isAdmin() && hasPermission('users:write'));
+
+      // Only superadmin can delete
+      allow delete: if isSuperAdmin();
+    }
+
+    // ── Content collection ────────────────────────────────────────────────
+
+    match /content/{docId} {
+      allow read: if hasPermission('content:read');
+
+      allow create: if hasPermission('content:write');
+
+      allow update: if hasPermission('content:write')
+        || (hasPermission('content:publish') &&
+            request.resource.data.diff(resource.data)
+              .affectedKeys().hasOnly(['published', 'publishedAt', 'updatedAt']));
+
+      allow delete: if hasPermission('content:delete');
+    }
+
+    // ── Reports collection ────────────────────────────────────────────────
+
+    match /reports/{reportId} {
+      allow read: if hasPermission('reports:read');
+      allow write: if isAdmin();
+    }
+
+    // ── Settings collection ───────────────────────────────────────────────
+
+    match /settings/{settingId} {
+      allow read: if hasPermission('settings:read');
+      allow write: if hasPermission('settings:write');
+    }
+
+    // ── Audit logs ────────────────────────────────────────────────────────
+
+    match /audit/{logId} {
+      allow read: if hasPermission('audit:read');
+      // Only server can write audit logs
+      allow write: if false;
+    }
+
+    // ── Roles collection ──────────────────────────────────────────────────
+
+    match /roles/{roleId} {
+      // Anyone authenticated can read roles (needed for UI and permission checks)
+      allow read: if isAuthenticated();
+
+      // Only admins with write permissions can manage roles
+      allow write: if isAdmin() && (hasPermission('users:write') || hasPermission('settings:write'));
+    }
+
+    // ── Permissions collection ────────────────────────────────────────────
+
+    match /permissions/{permId} {
+      // Anyone authenticated can read permissions
+      allow read: if isAuthenticated();
+      // Only superadmin can manage the master list of permissions
+      allow write: if isSuperAdmin();
+    }
+
+    // ── Tickets collection ────────────────────────────────────────────────
+ 
+     match /tickets/{ticketId} {
+       allow read, create, update: if request.auth != null;
+       allow delete: if request.auth != null && request.auth.token.role in ['superadmin', 'admin'];
+     }
+
+    // ── Projects collection ───────────────────────────────────────────────
+
+    match /projects/{projectId} {
+      allow read, create, update: if request.auth != null;
+      allow delete: if isAdmin();
+    }
+
+    // ── Checklists collection ─────────────────────────────────────────────
+    match /checklists/{checklistId} {
+      allow read, create, update: if request.auth != null;
+      allow delete: if isAdmin();
+    }
+ 
+     // ── Default: Super Admin has full access, others denied ───────────────
+    match /{document=**} {
+      allow read, write: if isSuperAdmin();
+    }
+  }
+}
