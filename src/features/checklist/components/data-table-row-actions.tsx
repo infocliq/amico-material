@@ -24,7 +24,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-black" asChild>
-              <Link to='/checklist/$id' params={{ id: row.original.id }}>
+              <Link to='/checklist/$id' params={{ id: row.original.id || '' }}>
                 <Eye className="h-4 w-4" />
               </Link>
             </Button>
@@ -35,7 +35,7 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-black" asChild>
-              <Link to='/checklist/$id/edit' params={{ id: row.original.id }}>
+              <Link to='/checklist/$id/edit' params={{ id: row.original.id || '' }}>
                 <Pencil className="h-4 w-4" />
               </Link>
             </Button>

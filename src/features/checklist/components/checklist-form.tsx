@@ -31,7 +31,7 @@ export function ChecklistForm({ initialData, isEdit }: ChecklistFormProps) {
   const navigate = useNavigate()
 
   const form = useForm<ChecklistItem>({
-    resolver: zodResolver(checklistSchema),
+    resolver: zodResolver(checklistSchema) as any,
     defaultValues: initialData || {
       id: '',
       modelNumber: '',
@@ -72,12 +72,13 @@ export function ChecklistForm({ initialData, isEdit }: ChecklistFormProps) {
   })
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (data: ChecklistItem) => {
+    mutationFn: async (data: any) => {
       if (isEdit && initialData) {
-        return updateChecklist(initialData.id, data)
+        await updateChecklist(initialData.id || '', data)
+        return
       }
       const { id, createdAt, updatedAt, ...rest } = data
-      return createChecklist(rest as any)
+      await createChecklist(rest as any)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['checklists'] })
@@ -95,7 +96,7 @@ export function ChecklistForm({ initialData, isEdit }: ChecklistFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 max-w-5xl mx-auto text-black pb-20'>
+      <form onSubmit={form.handleSubmit(onSubmit as any)} className='space-y-8 max-w-5xl mx-auto text-black pb-20'>
         {/* Header matching Create page screenshot */}
         <div>
           <Button
@@ -120,7 +121,7 @@ export function ChecklistForm({ initialData, isEdit }: ChecklistFormProps) {
                 </Badge>
               </div>
               <FormField
-                control={form.control}
+                control={form.control as any}
                 name='modelNumber'
                 render={({ field }) => (
                   <FormItem className='mt-2'>
@@ -179,7 +180,7 @@ export function ChecklistForm({ initialData, isEdit }: ChecklistFormProps) {
                 <div className='flex items-center gap-4'>
                   <AccordionTrigger className='hover:no-underline py-4 flex-1 justify-start gap-2'>
                     <FormField
-                      control={form.control}
+                      control={form.control as any}
                       name={`departments.${deptIndex}.name`}
                       render={({ field }) => (
                         <FormItem className="flex-1 text-left" onClick={(e) => e.stopPropagation()}>
@@ -208,7 +209,7 @@ export function ChecklistForm({ initialData, isEdit }: ChecklistFormProps) {
                 <AccordionContent>
                   <div className='py-4'>
                     <GroupsArray
-                      control={form.control}
+                      control={form.control as any}
                       deptIndex={deptIndex}
                     />
                   </div>
@@ -222,7 +223,7 @@ export function ChecklistForm({ initialData, isEdit }: ChecklistFormProps) {
   )
 }
 
-function GroupsArray({ control, deptIndex }: { control: Control<ChecklistItem>, deptIndex: number }) {
+function GroupsArray({ control, deptIndex }: { control: any, deptIndex: number }) {
   const { fields: groupFields, append: appendGroup, remove: removeGroup } = useFieldArray({
     control,
     name: `departments.${deptIndex}.groups`,
@@ -288,7 +289,7 @@ function GroupsArray({ control, deptIndex }: { control: Control<ChecklistItem>, 
   )
 }
 
-function ItemsArray({ control, deptIndex, groupIndex }: { control: Control<ChecklistItem>, deptIndex: number, groupIndex: number }) {
+function ItemsArray({ control, deptIndex, groupIndex }: { control: any, deptIndex: number, groupIndex: number }) {
   const { fields: itemFields, append: appendItem, remove: removeItem } = useFieldArray({
     control,
     name: `departments.${deptIndex}.groups.${groupIndex}.items`,

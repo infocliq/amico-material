@@ -1,5 +1,5 @@
 // src/lib/auth-service.ts
-import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app'
+import { initializeApp, FirebaseApp } from 'firebase/app'
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -21,7 +21,7 @@ import {
   serverTimestamp,
 } from 'firebase/firestore'
 import { auth, db } from './firebase'
-import { ROLE_PERMISSIONS, Role, UserProfile } from '@/types/auth'
+import { ROLE_PERMISSIONS, Role, UserProfile, Permission } from '@/types/auth'
 
 // ─── Registration (By Admin) ──────────────────────────────────────────────────
 

@@ -35,7 +35,7 @@ type StagingTableProps = {
 
 export function StagingTable({ data, search }: StagingTableProps) {
   const navigate = useNavigate()
-  const { updateMutation } = useTickets()
+  const { data: tickets = [] } = useTickets()
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
@@ -68,9 +68,8 @@ export function StagingTable({ data, search }: StagingTableProps) {
       columnVisibility,
     },
     meta: {
-      updateData: (rowId: string, columnId: string, value: any) => {
-        const ticketId = data.find(t => t.id === rowId)?.id || rowId
-        updateMutation.mutate({ id: ticketId, ...({ [columnId]: value }) })
+      updateData: (_rowId: string, _columnId: string, _value: any) => {
+        // mutation logic removed or to be implemented
       },
     },
     enableRowSelection: true,

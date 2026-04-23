@@ -109,7 +109,7 @@ export const stagingColumns: ColumnDef<Ticket>[] = [
     cell: ({ row }) => {
       return (
         <div className='flex items-center capitalize'>
-          {row.getValue('category').toString().replace('-', ' ')}
+          {(row.getValue('category') as string).replace('-', ' ')}
         </div>
       )
     },

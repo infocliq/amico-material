@@ -22,7 +22,7 @@ export function ProjectChecklistView({ project }: ProjectChecklistViewProps) {
 
   const { mutate, isPending } = useMutation({
     mutationFn: (newChecklist: any) => {
-      return updateProject(project.id, { checklist: newChecklist })
+      return updateProject(project.id, { checklist: newChecklist } as any)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects'] })

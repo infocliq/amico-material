@@ -8,10 +8,7 @@ import type {
 type SearchRecord = Record<string, unknown>
 
 export type NavigateFn = (opts: {
-  search:
-    | true
-    | SearchRecord
-    | ((prev: SearchRecord) => Partial<SearchRecord> | SearchRecord)
+  search: any
   replace?: boolean
 }) => void
 
@@ -124,7 +121,7 @@ export function useTableUrlState(
     const nextPage = next.pageIndex + 1
     const nextPageSize = next.pageSize
     navigate({
-      search: (prev) => ({
+      search: (prev: any) => ({
         ...(prev as SearchRecord),
         [pageKey]: nextPage <= defaultPage ? undefined : nextPage,
         [pageSizeKey]:
@@ -149,7 +146,7 @@ export function useTableUrlState(
           const value = trimGlobal ? next.trim() : next
           setGlobalFilter(value)
           navigate({
-            search: (prev) => ({
+            search: (prev: any) => ({
               ...(prev as SearchRecord),
               [pageKey]: undefined,
               [globalFilterKey]: value ? value : undefined,
@@ -182,7 +179,7 @@ export function useTableUrlState(
     }
 
     navigate({
-      search: (prev) => ({
+      search: (prev: any) => ({
         ...(prev as SearchRecord),
         [pageKey]: undefined,
         ...patch,
@@ -199,7 +196,7 @@ export function useTableUrlState(
     if (pageCount > 0 && pageNum > pageCount) {
       navigate({
         replace: true,
-        search: (prev) => ({
+        search: (prev: any) => ({
           ...(prev as SearchRecord),
           [pageKey]: opts.resetTo === 'last' ? pageCount : undefined,
         }),

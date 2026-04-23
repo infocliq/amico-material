@@ -56,7 +56,7 @@ export function PermissionGuard({
     const roleList = Array.isArray(roles) ? roles : [roles]
     if (!hasRole(roleList)) {
       if (redirect) {
-        navigate({ to: '/errors/unauthorized' })
+        navigate({ to: '/401' })
         return null
       }
       return <>{fallback}</>
@@ -72,7 +72,7 @@ export function PermissionGuard({
 
     if (!allowed) {
       if (redirect) {
-        navigate({ to: '/errors/forbidden' })
+        navigate({ to: '/403' })
         return null
       }
       return <>{fallback}</>

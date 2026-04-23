@@ -19,7 +19,7 @@ export function ChecklistViewDialog() {
 
   // mutation to update a single item's state
   const { mutate } = useMutation({
-    mutationFn: (data: any) => updateChecklist(currentRow!.id, data),
+    mutationFn: (data: any) => updateChecklist(currentRow?.id || '', data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['checklists'] })
     },
@@ -107,7 +107,7 @@ export function ChecklistViewDialog() {
         
         <div className="p-4 bg-muted/30 border-t text-center">
           <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">
-            Last Updated: {new Date(currentRow.updatedAt).toLocaleString()}
+            Last Updated: {new Date(currentRow.updatedAt || Date.now()).toLocaleString()}
           </p>
         </div>
       </DialogContent>

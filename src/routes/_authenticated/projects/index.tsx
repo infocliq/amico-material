@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { createFileRoute } from '@tanstack/react-router'
 import { Projects } from '@/features/projects'
-import { projectStatuses, frameworks } from '@/features/projects/data/data'
 
 const projectsSearchSchema = z.object({
   page: z.number().optional().catch(1),

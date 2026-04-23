@@ -30,7 +30,7 @@ import { checklistStatuses, checklistPriorities } from '../data/data'
 type DataTableProps = {
   data: ChecklistItem[]
   search: Record<string, unknown>
-  navigate: NavigateFn
+  navigate: any
 }
 
 export function ChecklistTable({ data, search, navigate }: DataTableProps) {

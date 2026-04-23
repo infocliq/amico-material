@@ -58,18 +58,18 @@ export const checklistColumns: ColumnDef<ChecklistItem>[] = [
       <DataTableColumnHeader column={column} title='Checklist Status' />
     ),
     cell: ({ row }) => {
-      const departments = row.original.departments || []
+      const departments = (row.original.departments as any[]) || []
       let total = 0
       let completed = 0
       
       departments.forEach(dept => {
-        const groups = dept.groups || []
+        const groups = (dept.groups as any[]) || []
         if (groups.length === 0) {
           total++
           if (dept.isChecked) completed++
         } else {
           groups.forEach(group => {
-            const items = group.items || []
+            const items = (group.items as any[]) || []
             if (items.length === 0) {
               total++
               if (group.isChecked) completed++

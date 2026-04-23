@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import {
-  Plus,
   CircleDot,
   Clock,
   AlertCircle,
@@ -35,7 +34,6 @@ import { cn } from '@/lib/utils'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet'
 import { ProjectChecklistView } from '@/features/projects/components/project-checklist-view'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Badge } from '@/components/ui/badge'
 
 const kanbanColumns = [
   { id: 'next', title: 'Next', icon: CircleDot, color: 'text-blue-500' },
@@ -95,20 +93,14 @@ function StagingContent() {
   const isLoading = stagingLoading || projectsLoading
   
   const [assigneeFilter, setAssigneeFilter] = useState<string | null>(null)
-  const [categoryFilter, setCategoryFilter] = useState<string | null>(null)
-  const [priorityFilter, setPriorityFilter] = useState<string | null>(null)
-  const [statusFilter, setStatusFilter] = useState<string | null>(null)
 
   const filteredItems = useMemo(() => {
     return tickets.filter(ticket => {
       const matchAssignee = !assigneeFilter || 
         (assigneeFilter === 'unassigned' ? (ticket.assignee === 'unassigned' || !ticket.assignee) : ticket.assignee === assigneeFilter)
-      const matchCategory = !categoryFilter || ticket.category === categoryFilter
-      const matchPriority = !priorityFilter || ticket.priority === priorityFilter
-      const matchStatus = !statusFilter || ticket.status === statusFilter
-      return matchAssignee && matchCategory && matchPriority && matchStatus
+      return matchAssignee
     })
-  }, [tickets, assigneeFilter, categoryFilter, priorityFilter, statusFilter])
+  }, [tickets, assigneeFilter])
 
   const groupedItems = useMemo(() => {
     return kanbanColumns.reduce((acc, col) => {
@@ -161,7 +153,6 @@ function StagingContent() {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-
           </div>
         </div>
 

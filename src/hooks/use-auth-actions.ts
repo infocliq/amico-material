@@ -14,6 +14,7 @@ interface UseAuthActions {
     email: string,
     password: string,
     displayName: string,
+    phoneNumber: string,
     role?: Role
   ) => Promise<UserProfile | null>
   login: (email: string, password: string) => Promise<UserProfile | null>
@@ -44,8 +45,8 @@ export function useAuthActions(): UseAuthActions {
   }
 
   return {
-    register: (email, password, displayName, role) =>
-      wrap(() => registerUser(email, password, displayName, role)),
+    register: (email, password, displayName, phoneNumber, role) =>
+      wrap(() => registerUser(email, password, displayName, phoneNumber, role)),
 
     login: (email, password) => wrap(() => loginUser(email, password)),
 

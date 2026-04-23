@@ -61,7 +61,7 @@ export function ChecklistSelectCell({ value, onSave }: ChecklistSelectCellProps)
       </SelectTrigger>
       <SelectContent>
         {checklists?.map((c) => (
-          <SelectItem key={c.id} value={c.id}>
+          <SelectItem key={c.id} value={c.id || ''}>
             {c.modelNumber}
           </SelectItem>
         ))}

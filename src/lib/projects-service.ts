@@ -18,18 +18,20 @@ export interface Project {
   id: string
   salesOrder: string
   workOrder: string
-  shipDate: string
+  shipDate: string | Date
   name: string
   quantity: number
-  productionStart: string
-  supportStart: string
+  productionStart: string | Date
+  supportStart: string | Date
   drawing: string
   productType: string
   status: 'none' | 'next' | 'preparing' | 'staged' | 'done'
   assignee: string
   tasks: string[]
-  createdAt: string
-  updatedAt: string
+  checklist?: any
+  checklistId?: string
+  createdAt: string | Date
+  updatedAt: string | Date
 }
 
 export async function getProjects(): Promise<Project[]> {

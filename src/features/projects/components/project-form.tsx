@@ -37,11 +37,11 @@ import { projectStatuses } from '../data/data'
 export const projectFormSchema = z.object({
   salesOrder: z.string().min(1, { message: 'Sales Order is required.' }),
   workOrder: z.string().min(1, { message: 'Work Order is required.' }),
-  shipDate: z.date({ required_error: 'Ship date is required.' }),
+  shipDate: z.date({ message: 'Ship date is required.' }),
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
   quantity: z.coerce.number().min(1, { message: 'Quantity must be at least 1.' }),
-  productionStart: z.date({ required_error: 'Production start date is required.' }),
-  supportStart: z.date({ required_error: 'Support start date is required.' }),
+  productionStart: z.date({ message: 'Production start date is required.' }),
+  supportStart: z.date({ message: 'Support start date is required.' }),
   drawing: z.string().min(1, { message: 'Drawing reference is required.' }),
   productType: z.string().optional(),
   status: z.enum(['none', 'next', 'preparing', 'staged', 'done']),
@@ -50,7 +50,7 @@ export const projectFormSchema = z.object({
 export type ProjectFormValues = z.infer<typeof projectFormSchema>
 
 interface ProjectFormProps {
-  form: UseFormReturn<ProjectFormValues>
+  form: any
   onSubmit: (values: ProjectFormValues) => void
 }
 

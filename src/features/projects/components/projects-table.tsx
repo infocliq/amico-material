@@ -62,7 +62,7 @@ export function ProjectsTable({ data, search, navigate }: DataTableProps) {
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string, data: Partial<Project> }) => updateProject(id, data),
+    mutationFn: ({ id, data }: { id: string, data: Partial<Project> }) => updateProject(id, data as any),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: projectQueryKey })
       toast.success('Project updated!')

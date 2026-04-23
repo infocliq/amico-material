@@ -26,8 +26,8 @@ export function EditProject() {
     queryFn: () => getProject(projectId),
   })
 
-  const form = useForm<ProjectFormValues>({
-    resolver: zodResolver(projectFormSchema),
+  const form = useForm<ProjectFormValues, any, any>({
+    resolver: zodResolver(projectFormSchema) as any,
   })
 
   useEffect(() => {

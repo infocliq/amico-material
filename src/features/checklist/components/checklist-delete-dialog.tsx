@@ -56,7 +56,7 @@ export function ChecklistDeleteDialog() {
             disabled={isPending}
             onClick={(e) => {
               e.preventDefault()
-              if (currentRow) mutate(currentRow.id)
+              if (currentRow) mutate(currentRow.id || '')
             }}
           >
             {isPending && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}

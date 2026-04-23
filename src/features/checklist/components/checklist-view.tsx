@@ -26,7 +26,7 @@ export function ChecklistView({ data }: ChecklistViewProps) {
 
   const { mutate } = useMutation({
     mutationFn: (updateData: any) => {
-      return updateChecklist(data.id, updateData)
+      return updateChecklist(data.id || '', updateData)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['checklist', data.id] })
@@ -146,7 +146,7 @@ export function ChecklistView({ data }: ChecklistViewProps) {
               className='gap-1.5 bg-black text-white hover:bg-black/90'
               asChild
             >
-              <Link to='/checklist/$id/edit' params={{ id: localData.id }}>
+              <Link to='/checklist/$id/edit' params={{ id: localData.id || '' }}>
                 <Save className='size-4' />
                 Edit Checklist
               </Link>
@@ -266,7 +266,7 @@ export function ChecklistView({ data }: ChecklistViewProps) {
 
       <div className="pt-12 text-center">
         <p className="text-[10px] text-black font-bold tracking-widest uppercase">
-          Last Synchronized: {new Date(localData.updatedAt).toLocaleTimeString()}
+          Last Synchronized: {new Date(localData.updatedAt || Date.now()).toLocaleTimeString()}
         </p>
       </div>
     </div>

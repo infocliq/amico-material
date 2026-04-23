@@ -36,7 +36,7 @@ export function ChecklistActionDialog() {
   const queryClient = useQueryClient()
 
   const form = useForm<ChecklistItem>({
-    resolver: zodResolver(checklistSchema),
+    resolver: zodResolver(checklistSchema) as any,
     defaultValues: {
       modelNumber: '',
       departments: [],
@@ -94,12 +94,13 @@ export function ChecklistActionDialog() {
   }, [open, currentRow, form])
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (data: ChecklistItem) => {
+    mutationFn: async (data: ChecklistItem) => {
       if (isEdit && currentRow) {
-        return updateChecklist(currentRow.id, data)
+        await updateChecklist(currentRow.id || '', data)
+        return
       }
       const { id, createdAt, updatedAt, ...rest } = data
-      return createChecklist(rest as any)
+      await createChecklist(rest as any)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['checklists'] })
@@ -167,9 +168,11 @@ export function ChecklistActionDialog() {
                     onClick={() => appendDept({
                       id: Math.random().toString(36).substring(7),
                       name: '',
+                      isChecked: false,
                       groups: [{
                         id: Math.random().toString(36).substring(7),
                         name: '',
+                        isChecked: false,
                         items: [{ id: Math.random().toString(36).substring(7), name: '', isChecked: false }]
                       }]
                     })}
@@ -243,7 +246,7 @@ export function ChecklistActionDialog() {
   )
 }
 
-function GroupsArray({ control, deptIndex, form }: { control: Control<ChecklistItem>, deptIndex: number, form: any }) {
+function GroupsArray({ control, deptIndex, form }: { control: any, deptIndex: number, form: any }) {
   const { fields: groupFields, append: appendGroup, remove: removeGroup } = useFieldArray({
     control,
     name: `departments.${deptIndex}.groups`,
@@ -264,6 +267,7 @@ function GroupsArray({ control, deptIndex, form }: { control: Control<ChecklistI
           onClick={() => appendGroup({
             id: Math.random().toString(36).substring(7),
             name: '',
+            isChecked: false,
             items: [{ id: Math.random().toString(36).substring(7), name: '', isChecked: false }]
           })}
         >
@@ -310,7 +314,7 @@ function GroupsArray({ control, deptIndex, form }: { control: Control<ChecklistI
   )
 }
 
-function ItemsArray({ control, deptIndex, groupIndex }: { control: Control<ChecklistItem>, deptIndex: number, groupIndex: number }) {
+function ItemsArray({ control, deptIndex, groupIndex }: { control: any, deptIndex: number, groupIndex: number }) {
   const { fields: itemFields, append: appendItem, remove: removeItem } = useFieldArray({
     control,
     name: `departments.${deptIndex}.groups.${groupIndex}.items`,

@@ -89,7 +89,7 @@ export async function requirePermission(opts: {
   }
 
   if (opts.roles && !opts.roles.includes(profile.role)) {
-    throw redirect({ to: '/errors/unauthorized' })
+    throw redirect({ to: '/401' })
   }
 
   if (opts.permissions) {
@@ -99,7 +99,7 @@ export async function requirePermission(opts: {
       : opts.permissions.some((p) => userPerms.includes(p))
 
     if (!allowed) {
-      throw redirect({ to: '/errors/forbidden' })
+      throw redirect({ to: '/403' })
     }
   }
 

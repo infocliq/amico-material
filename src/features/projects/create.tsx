@@ -19,8 +19,8 @@ export function CreateProject() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const form = useForm<ProjectFormValues>({
-    resolver: zodResolver(projectFormSchema),
+  const form = useForm<ProjectFormValues, any, any>({
+    resolver: zodResolver(projectFormSchema) as any,
     defaultValues: {
       salesOrder: '',
       workOrder: '',

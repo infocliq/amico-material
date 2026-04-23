@@ -2,7 +2,7 @@ import { TrashIcon } from '@radix-ui/react-icons'
 import { type Table } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
-import { useTicketsContext } from './tickets-provider'
+import { useStagingContext } from './staging-provider'
 import { bulkDeleteTickets } from '@/lib/tickets-service'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
@@ -15,7 +15,7 @@ export function DataTableBulkActions<TData>({
   table,
 }: DataTableBulkActionsProps<TData>) {
   const selectedRows = table.getSelectedRowModel().rows
-  const { setOpen, setCurrentRow } = useTicketsContext()
+  const { setOpen, setCurrentRow } = useStagingContext()
   const queryClient = useQueryClient()
   const [isLoading, setIsLoading] = useState(false)
 
