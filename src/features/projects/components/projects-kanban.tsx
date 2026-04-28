@@ -5,7 +5,9 @@ import {
   PlayCircle,
   Activity,
   CheckCircle2,
-  ListChecks
+  ListChecks,
+  Package,
+  FileText
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { type Project } from '../data/schema'
@@ -146,12 +148,21 @@ function ProjectCard({ project, onClick }: { project: Project, onClick: () => vo
     >
       <div className='flex flex-col gap-1'>
         <div className='flex items-center justify-between gap-2'>
-          <span className='text-[10px] font-bold text-muted-foreground uppercase tracking-wider'>WO: {project.workOrder}</span>
+          <div className='flex items-center gap-2'>
+            <Package className='size-3.5 text-black/70' />
+            <span className='text-[10px] font-bold text-black uppercase tracking-wider'>WO: {project.workOrder}</span>
+          </div>
           <Badge variant='outline' className='text-[9px] h-4 px-1 opacity-70 border-black/20 text-black'>{project.productType}</Badge>
         </div>
-        <h4 className='font-semibold text-sm leading-tight text-foreground line-clamp-2'>
+        <h4 className='font-semibold text-sm leading-tight text-foreground truncate'>
           {project.name}
         </h4>
+        {project.drawing && (
+          <div className='flex items-center gap-1.5 mt-0.5'>
+            <FileText className='size-3.5 text-blue-600/70' />
+            <span className='text-[10px] font-bold text-black/60 uppercase tracking-wider'>Drawing: {project.drawing}</span>
+          </div>
+        )}
       </div>
 
       <div className='flex flex-col gap-1.5'>

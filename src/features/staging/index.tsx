@@ -7,7 +7,8 @@ import {
   CheckCircle2,
   Package,
   ListChecks,
-  Users as UsersIcon
+  Users as UsersIcon,
+  FileText
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Header } from '@/components/layout/header'
@@ -283,11 +284,17 @@ function ProjectItemCard({ item, onClick }: { item: any, onClick: () => void }) 
           </div>
           <span className='text-[9px] px-1 bg-primary/20 text-primary border border-primary/20 rounded h-3.5 flex items-center'>{item.productType}</span>
        </div>
-       <h4 className={cn('font-semibold text-sm leading-tight text-foreground line-clamp-2',
+       <h4 className={cn('font-semibold text-sm leading-tight text-foreground truncate',
           item.status === 'done' && 'text-muted-foreground line-through opacity-60'
        )}>
           {item.name}
        </h4>
+       {item.drawing && (
+          <div className='flex items-center gap-1.5 mt-0.5'>
+            <FileText className='size-3.5 text-blue-600/70' />
+            <span className='text-[10px] font-bold text-black/60 uppercase tracking-wider'>Drawing: {item.drawing}</span>
+          </div>
+       )}
        <div className='flex items-center justify-between mt-1 text-[10px] text-muted-foreground'>
           <span>Qty: <span className='text-foreground font-medium'>{item.quantity}</span></span>
           {item.productionStart && (
