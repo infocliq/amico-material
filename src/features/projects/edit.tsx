@@ -34,8 +34,10 @@ export function EditProject() {
     if (project) {
       form.reset({
         ...project,
+        asBuiltDate: project.asBuiltDate ? new Date(project.asBuiltDate) : undefined,
         shipDate: project.shipDate ? new Date(project.shipDate) : undefined,
         productionStart: project.productionStart ? new Date(project.productionStart) : undefined,
+        productionEnd: project.productionEnd ? new Date(project.productionEnd) : undefined,
         supportStart: project.supportStart ? new Date(project.supportStart) : undefined,
       } as any)
     }

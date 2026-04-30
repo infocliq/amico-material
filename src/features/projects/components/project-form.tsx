@@ -1,6 +1,7 @@
-import { UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 import { format } from 'date-fns'
+import { useQuery } from '@tanstack/react-query'
+import { getChecklists, getChecklist } from '@/lib/checklist-service'
 import {
   Calendar as CalendarIcon,
   ALargeSmall,
@@ -13,6 +14,13 @@ import {
   FileText,
   Activity,
   Layout,
+  CalendarCheck,
+  Users,
+  Layers,
+  ListOrdered,
+  CalendarClock,
+  StepForward,
+  Hammer,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -36,15 +44,23 @@ import { projectStatuses } from '../data/data'
 
 export const projectFormSchema = z.object({
   salesOrder: z.string().min(1, { message: 'Sales Order is required.' }),
-  workOrder: z.string().min(1, { message: 'Work Order is required.' }),
+  productionOrder: z.string().optional(),
+  workOrder: z.string().optional(),
+  asBuiltDate: z.date().optional(),
   shipDate: z.date({ message: 'Ship date is required.' }),
+  supervisors: z.string().optional(),
+  line: z.string().optional(),
+  plNumber: z.string().optional(),
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
-  quantity: z.coerce.number().min(1, { message: 'Quantity must be at least 1.' }),
+  product: z.string().optional(),
   productionStart: z.date({ message: 'Production start date is required.' }),
+  productionEnd: z.date().optional(),
+  phase: z.string().optional(),
+  drawing: z.string().optional(),
   supportStart: z.date({ message: 'Support start date is required.' }),
-  drawing: z.string().min(1, { message: 'Drawing reference is required.' }),
-  productType: z.string().optional(),
+  panelMaterial: z.string().optional(),
   status: z.enum(['none', 'next', 'preparing', 'staged', 'done']),
+  checklistId: z.string().optional(),
 })
 
 export type ProjectFormValues = z.infer<typeof projectFormSchema>
@@ -96,13 +112,13 @@ export function ProjectForm({ form, onSubmit }: ProjectFormProps) {
               />
               <FormField
                 control={form.control}
-                name='workOrder'
+                name='productionOrder'
                 render={({ field }) => (
                   <FieldGroup>
-                    <FieldLabel><FileDigit className='size-4 text-muted-foreground' /> Work Order</FieldLabel>
+                    <FieldLabel><FileDigit className='size-4 text-muted-foreground' /> Production Order</FieldLabel>
                     <FieldContent>
                       <FormControl>
-                        <Input {...field} placeholder='WO-67890' className='h-10' />
+                        <Input {...field} placeholder='PO-67890' className='h-10' />
                       </FormControl>
                       <FormMessage />
                     </FieldContent>
@@ -114,7 +130,7 @@ export function ProjectForm({ form, onSubmit }: ProjectFormProps) {
                 name='name'
                 render={({ field }) => (
                   <FieldGroup>
-                    <FieldLabel><ALargeSmall className='size-4 text-muted-foreground' /> Name</FieldLabel>
+                    <FieldLabel><ALargeSmall className='size-4 text-muted-foreground' /> Project Name</FieldLabel>
                     <FieldContent>
                       <FormControl>
                         <Input {...field} placeholder='Project Name' className='h-10' />
@@ -126,13 +142,103 @@ export function ProjectForm({ form, onSubmit }: ProjectFormProps) {
               />
               <FormField
                 control={form.control}
-                name='productType'
+                name='product'
                 render={({ field }) => (
                   <FieldGroup>
-                    <FieldLabel><Layout className='size-4 text-muted-foreground' /> Product Type</FieldLabel>
+                    <FieldLabel><Package className='size-4 text-muted-foreground' /> Product</FieldLabel>
                     <FieldContent>
                       <FormControl>
                         <Input {...field} placeholder='e.g. Mechanical, Medical' className='h-10' />
+                      </FormControl>
+                      <FormMessage />
+                    </FieldContent>
+                  </FieldGroup>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='supervisors'
+                render={({ field }) => (
+                  <FieldGroup>
+                    <FieldLabel><Users className='size-4 text-muted-foreground' /> Supervisors</FieldLabel>
+                    <FieldContent>
+                      <FormControl>
+                        <Input {...field} placeholder='John Doe, Jane Smith' className='h-10' />
+                      </FormControl>
+                      <FormMessage />
+                    </FieldContent>
+                  </FieldGroup>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='line'
+                render={({ field }) => (
+                  <FieldGroup>
+                    <FieldLabel><Layers className='size-4 text-muted-foreground' /> Line</FieldLabel>
+                    <FieldContent>
+                      <FormControl>
+                        <Input {...field} placeholder='Line A' className='h-10' />
+                      </FormControl>
+                      <FormMessage />
+                    </FieldContent>
+                  </FieldGroup>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='plNumber'
+                render={({ field }) => (
+                  <FieldGroup>
+                    <FieldLabel><ListOrdered className='size-4 text-muted-foreground' /> PL#</FieldLabel>
+                    <FieldContent>
+                      <FormControl>
+                        <Input {...field} placeholder='PL-001' className='h-10' />
+                      </FormControl>
+                      <FormMessage />
+                    </FieldContent>
+                  </FieldGroup>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='phase'
+                render={({ field }) => (
+                  <FieldGroup>
+                    <FieldLabel><StepForward className='size-4 text-muted-foreground' /> Phase</FieldLabel>
+                    <FieldContent>
+                      <FormControl>
+                        <Input {...field} placeholder='Phase 1' className='h-10' />
+                      </FormControl>
+                      <FormMessage />
+                    </FieldContent>
+                  </FieldGroup>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='panelMaterial'
+                render={({ field }) => (
+                  <FieldGroup>
+                    <FieldLabel><Hammer className='size-4 text-muted-foreground' /> Panel Material</FieldLabel>
+                    <FieldContent>
+                      <FormControl>
+                        <Input {...field} placeholder='Aluminum, Steel' className='h-10' />
+                      </FormControl>
+                      <FormMessage />
+                    </FieldContent>
+                  </FieldGroup>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='drawing'
+                render={({ field }) => (
+                  <FieldGroup>
+                    <FieldLabel><FileText className='size-4 text-muted-foreground' /> Drawing</FieldLabel>
+                    <FieldContent>
+                      <FormControl>
+                        <Input {...field} placeholder='DWG-789' className='h-10' />
                       </FormControl>
                       <FormMessage />
                     </FieldContent>
@@ -168,111 +274,178 @@ export function ProjectForm({ form, onSubmit }: ProjectFormProps) {
                   </FieldGroup>
                 )}
               />
+              
               <FormField
                 control={form.control}
-                name='quantity'
-                render={({ field }) => (
-                  <FieldGroup>
-                    <FieldLabel><Package className='size-4 text-muted-foreground' /> Quantity</FieldLabel>
-                    <FieldContent>
-                      <FormControl>
-                        <Input {...field} type='number' className='h-10' />
-                      </FormControl>
-                      <FormMessage />
-                    </FieldContent>
-                  </FieldGroup>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='shipDate'
-                render={({ field }) => (
-                  <FieldGroup>
-                    <FieldLabel><CalendarDays className='size-4 text-muted-foreground' /> Ship Date</FieldLabel>
-                    <FieldContent>
-                      <Popover modal={true}>
-                        <PopoverTrigger asChild>
+                name='checklistId'
+                render={({ field }) => {
+                  const { data: checklists } = useQuery({
+                    queryKey: ['checklists'],
+                    queryFn: getChecklists,
+                  })
+
+                  return (
+                    <FieldGroup>
+                      <FieldLabel><ListOrdered className='size-4 text-muted-foreground' /> Checklist Template</FieldLabel>
+                      <FieldContent>
+                        <Select 
+                          onValueChange={async (val) => {
+                            field.onChange(val)
+                            // Optionally fetch and store the full checklist structure if needed
+                            const template = await getChecklist(val)
+                            if (template) {
+                              form.setValue('checklist', template)
+                            }
+                          }} 
+                          defaultValue={field.value}
+                        >
                           <FormControl>
-                            <Button variant='outline' className={cn('h-10 justify-start text-left font-normal', !field.value && 'text-muted-foreground')}>
-                              <CalendarIcon className='mr-2 h-4 w-4' />
-                              {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
-                            </Button>
+                            <SelectTrigger className='h-10'>
+                              <SelectValue placeholder='Select a template' />
+                            </SelectTrigger>
                           </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className='w-auto p-0' align='start'>
-                          <Calendar mode='single' selected={field.value} onSelect={field.onChange} />
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage />
-                    </FieldContent>
-                  </FieldGroup>
-                )}
+                          <SelectContent>
+                            {checklists?.map(c => (
+                              <SelectItem key={c.id} value={c.id || ''}>
+                                {c.modelNumber}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FieldContent>
+                    </FieldGroup>
+                  )
+                }}
               />
-              <FormField
-                control={form.control}
-                name='productionStart'
-                render={({ field }) => (
-                  <FieldGroup>
-                    <FieldLabel><Factory className='size-4 text-muted-foreground' /> Production Start</FieldLabel>
-                    <FieldContent>
-                      <Popover modal={true}>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button variant='outline' className={cn('h-10 justify-start text-left font-normal', !field.value && 'text-muted-foreground')}>
-                              <CalendarIcon className='mr-2 h-4 w-4' />
-                              {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className='w-auto p-0' align='start'>
-                          <Calendar mode='single' selected={field.value} onSelect={field.onChange} />
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage />
-                    </FieldContent>
-                  </FieldGroup>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='supportStart'
-                render={({ field }) => (
-                  <FieldGroup>
-                    <FieldLabel><Headphones className='size-4 text-muted-foreground' /> Support Start</FieldLabel>
-                    <FieldContent>
-                      <Popover modal={true}>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button variant='outline' className={cn('h-10 justify-start text-left font-normal', !field.value && 'text-muted-foreground')}>
-                              <CalendarIcon className='mr-2 h-4 w-4' />
-                              {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className='w-auto p-0' align='start'>
-                          <Calendar mode='single' selected={field.value} onSelect={field.onChange} />
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage />
-                    </FieldContent>
-                  </FieldGroup>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='drawing'
-                render={({ field }) => (
-                  <FieldGroup>
-                    <FieldLabel><FileText className='size-4 text-muted-foreground' /> Drawing</FieldLabel>
-                    <FieldContent>
-                      <FormControl>
-                        <Input {...field} placeholder='DWG-789' className='h-10' />
-                      </FormControl>
-                      <FormMessage />
-                    </FieldContent>
-                  </FieldGroup>
-                )}
-              />
+
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-6 col-span-1 md:col-span-2 border-t pt-6'>
+                <FormField
+                  control={form.control}
+                  name='productionStart'
+                  render={({ field }) => (
+                    <FieldGroup>
+                      <FieldLabel><Factory className='size-4 text-muted-foreground' /> Production Start</FieldLabel>
+                      <FieldContent>
+                        <Popover modal={true}>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button variant='outline' className={cn('h-10 justify-start text-left font-normal', !field.value && 'text-muted-foreground')}>
+                                <CalendarIcon className='mr-2 h-4 w-4' />
+                                {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className='w-auto p-0' align='start'>
+                            <Calendar mode='single' selected={field.value} onSelect={field.onChange} />
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FieldContent>
+                    </FieldGroup>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='productionEnd'
+                  render={({ field }) => (
+                    <FieldGroup>
+                      <FieldLabel><CalendarClock className='size-4 text-muted-foreground' /> Production End</FieldLabel>
+                      <FieldContent>
+                        <Popover modal={true}>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button variant='outline' className={cn('h-10 justify-start text-left font-normal', !field.value && 'text-muted-foreground')}>
+                                <CalendarIcon className='mr-2 h-4 w-4' />
+                                {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className='w-auto p-0' align='start'>
+                            <Calendar mode='single' selected={field.value} onSelect={field.onChange} />
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FieldContent>
+                    </FieldGroup>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='asBuiltDate'
+                  render={({ field }) => (
+                    <FieldGroup>
+                      <FieldLabel><CalendarCheck className='size-4 text-muted-foreground' /> As-Built Date</FieldLabel>
+                      <FieldContent>
+                        <Popover modal={true}>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button variant='outline' className={cn('h-10 justify-start text-left font-normal', !field.value && 'text-muted-foreground')}>
+                                <CalendarIcon className='mr-2 h-4 w-4' />
+                                {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className='w-auto p-0' align='start'>
+                            <Calendar mode='single' selected={field.value} onSelect={field.onChange} />
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FieldContent>
+                    </FieldGroup>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='shipDate'
+                  render={({ field }) => (
+                    <FieldGroup>
+                      <FieldLabel><CalendarDays className='size-4 text-muted-foreground' /> Ship Date</FieldLabel>
+                      <FieldContent>
+                        <Popover modal={true}>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button variant='outline' className={cn('h-10 justify-start text-left font-normal', !field.value && 'text-muted-foreground')}>
+                                <CalendarIcon className='mr-2 h-4 w-4' />
+                                {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className='w-auto p-0' align='start'>
+                            <Calendar mode='single' selected={field.value} onSelect={field.onChange} />
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FieldContent>
+                    </FieldGroup>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='supportStart'
+                  render={({ field }) => (
+                    <FieldGroup>
+                      <FieldLabel><Headphones className='size-4 text-muted-foreground' /> Support Start Date</FieldLabel>
+                      <FieldContent>
+                        <Popover modal={true}>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button variant='outline' className={cn('h-10 justify-start text-left font-normal', !field.value && 'text-muted-foreground')}>
+                                <CalendarIcon className='mr-2 h-4 w-4' />
+                                {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className='w-auto p-0' align='start'>
+                            <Calendar mode='single' selected={field.value} onSelect={field.onChange} />
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FieldContent>
+                    </FieldGroup>
+                  )}
+                />
+              </div>
             </div>
           </fieldset>
         </form>

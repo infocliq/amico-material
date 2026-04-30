@@ -113,7 +113,7 @@ export function ProjectsKanban({ data }: ProjectsKanbanProps) {
                   Project Checklist
                 </SheetTitle>
                 <SheetDescription className="text-[10px] sm:text-xs font-medium text-black/50 truncate">
-                   {selectedProject?.name} • WO: {selectedProject?.workOrder}
+                   {selectedProject?.name} • PO: {selectedProject?.productionOrder}
                 </SheetDescription>
               </div>
             </div>
@@ -150,9 +150,9 @@ function ProjectCard({ project, onClick }: { project: Project, onClick: () => vo
         <div className='flex items-center justify-between gap-2'>
           <div className='flex items-center gap-2'>
             <Package className='size-3.5 text-black/70' />
-            <span className='text-[10px] font-bold text-black uppercase tracking-wider'>WO: {project.workOrder}</span>
+            <span className='text-[10px] font-bold text-black uppercase tracking-wider'>PO: {project.productionOrder}</span>
           </div>
-          <Badge variant='outline' className='text-[9px] h-4 px-1 opacity-70 border-black/20 text-black'>{project.productType}</Badge>
+          <Badge variant='outline' className='text-[9px] h-4 px-1 opacity-70 border-black/20 text-black'>{project.product}</Badge>
         </div>
         <h4 className='font-semibold text-sm leading-tight text-foreground truncate'>
           {project.name}
@@ -168,7 +168,7 @@ function ProjectCard({ project, onClick }: { project: Project, onClick: () => vo
       <div className='flex flex-col gap-1.5'>
         <div className='flex items-center justify-between text-[11px] text-muted-foreground'>
           <span className='flex items-center gap-1.5'>
-             Qty: <span className='text-foreground font-medium'>{project.quantity}</span>
+             SO: <span className='text-foreground font-medium'>{project.salesOrder}</span>
           </span>
           {project.productionStart && (
             <span className='flex items-center gap-1.5'>

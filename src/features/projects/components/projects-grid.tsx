@@ -128,7 +128,7 @@ function ProjectCard({ project }: { project: Project }) {
         {/* Header */}
         <div className='flex items-start justify-between'>
           <div className='space-y-0.5 min-w-0'>
-            <p className='text-sm font-medium text-foreground truncate uppercase tracking-wider text-[10px] opacity-70'>{project.productType}</p>
+            <p className='text-sm font-medium text-foreground truncate uppercase tracking-wider text-[10px] opacity-70'>{project.product}</p>
             <p className='text-xs text-muted-foreground truncate'>Web Development</p>
             <h4 className='text-base font-semibold text-foreground truncate group-hover:text-primary transition-colors'>{project.name}</h4>
             <div className='flex items-center gap-1 text-xs text-muted-foreground'>

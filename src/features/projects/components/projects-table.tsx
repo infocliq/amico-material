@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import {
   type SortingState,
   type VisibilityState,
@@ -13,8 +13,8 @@ import {
 } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
 import { type NavigateFn, useTableUrlState } from '@/hooks/use-table-url-state'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { updateProject } from '@/lib/projects-service'
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
+import { updateProject, getProjectHeaders } from '@/lib/projects-service'
 import { toast } from 'sonner'
 import {
   Table,
@@ -26,8 +26,9 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination, DataTableToolbar } from '@/components/data-table'
 import { type Project } from '../data/schema'
-import { projectsColumns } from './projects-columns'
+import { getProjectsColumns } from './projects-columns'
 import { projectStatuses, projectRowColors } from '../data/data'
+import { DataTableBulkActions } from './data-table-bulk-actions'
 
 const projectQueryKey = ['projects']
 
@@ -42,6 +43,13 @@ export function ProjectsTable({ data, search, navigate }: DataTableProps) {
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [sorting, setSorting] = useState<SortingState>([])
+
+  const { data: headersMap } = useQuery({
+    queryKey: ['projectHeaders'],
+    queryFn: getProjectHeaders,
+  })
+
+  const columns = useMemo(() => getProjectsColumns(headersMap || {}), [headersMap])
 
   const {
     columnFilters,
@@ -72,7 +80,7 @@ export function ProjectsTable({ data, search, navigate }: DataTableProps) {
 
   const table = useReactTable({
     data,
-    columns: projectsColumns,
+    columns,
     state: {
       sorting,
       columnVisibility,
@@ -179,7 +187,7 @@ export function ProjectsTable({ data, search, navigate }: DataTableProps) {
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={projectsColumns.length}
+                  colSpan={columns.length}
                   className='h-24 text-center'
                 >
                   No results.
@@ -190,6 +198,7 @@ export function ProjectsTable({ data, search, navigate }: DataTableProps) {
         </Table>
       </div>
       <DataTablePagination table={table} className='mt-auto' />
+      <DataTableBulkActions table={table} />
     </div>
   )
 }
