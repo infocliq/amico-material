@@ -52,6 +52,8 @@ export function ProjectsTable({ data, search, navigate }: DataTableProps) {
   const columns = useMemo(() => getProjectsColumns(headersMap || {}), [headersMap])
 
   const {
+    onGlobalFilterChange,
+    globalFilter,
     columnFilters,
     onColumnFiltersChange,
     pagination,
@@ -60,13 +62,9 @@ export function ProjectsTable({ data, search, navigate }: DataTableProps) {
   } = useTableUrlState({
     search,
     navigate,
-    pagination: { defaultPage: 1, defaultPageSize: 10 },
-    globalFilter: { enabled: false },
-    columnFilters: [
-      { columnId: 'salesOrder', searchKey: 'salesOrder', type: 'string' },
-      { columnId: 'workOrder', searchKey: 'workOrder', type: 'string' },
-      { columnId: 'name', searchKey: 'name', type: 'string' },
-    ],
+    pagination: { defaultPage: 1, defaultPageSize: 10000 },
+    globalFilter: { enabled: true },
+    columnFilters: [],
   })
 
   const updateMutation = useMutation({
@@ -86,6 +84,7 @@ export function ProjectsTable({ data, search, navigate }: DataTableProps) {
       columnVisibility,
       rowSelection,
       columnFilters,
+      globalFilter,
       pagination,
     },
     meta: {
@@ -99,7 +98,18 @@ export function ProjectsTable({ data, search, navigate }: DataTableProps) {
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     onColumnFiltersChange,
+    onGlobalFilterChange,
     onPaginationChange,
+    globalFilterFn: (row, columnId, filterValue) => {
+      const search = filterValue.toLowerCase()
+      const name = (row.getValue('name') as string || '').toLowerCase()
+      const salesOrder = (row.getValue('salesOrder') as string || '').toLowerCase()
+      const productionOrder = (row.getValue('productionOrder') as string || '').toLowerCase()
+      
+      return name.includes(search) || 
+             salesOrder.includes(search) || 
+             productionOrder.includes(search)
+    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -119,8 +129,7 @@ export function ProjectsTable({ data, search, navigate }: DataTableProps) {
     )}>
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Filter by sales order...'
-        searchKey='salesOrder'
+        searchPlaceholder='Search project, sales order, production order...'
         filters={[
           {
             columnId: 'status',
@@ -133,7 +142,7 @@ export function ProjectsTable({ data, search, navigate }: DataTableProps) {
           },
         ]}
       />
-      <div className='overflow-hidden rounded-md border text-xs xl:text-sm'>
+      <div className='flex-1 overflow-auto rounded-md border text-xs xl:text-sm'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -197,7 +206,6 @@ export function ProjectsTable({ data, search, navigate }: DataTableProps) {
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} className='mt-auto' />
       <DataTableBulkActions table={table} />
     </div>
   )
