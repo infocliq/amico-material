@@ -33,7 +33,7 @@ const calculateProgress = (checklist: any) => {
   if (!checklist || !checklist.departments) return { completed: 0, total: 0 }
   let total = 0
   let completed = 0
-  
+
   checklist.departments.forEach((dept: any) => {
     const groups = dept.groups || []
     if (groups.length === 0) {
@@ -80,12 +80,12 @@ export function ProjectsKanban({ data }: ProjectsKanbanProps) {
               </span>
             </div>
           </div>
-          
+
           <div className='flex flex-col gap-3'>
             {groupedProjects[column.id]?.map((project) => (
-              <ProjectCard 
-                key={project.id} 
-                project={project} 
+              <ProjectCard
+                key={project.id}
+                project={project}
                 onClick={() => setSelectedProject(project)}
               />
             ))}
@@ -99,8 +99,8 @@ export function ProjectsKanban({ data }: ProjectsKanbanProps) {
       ))}
 
       <Sheet open={!!selectedProject} onOpenChange={(open) => !open && setSelectedProject(null)}>
-        <SheetContent 
-          side="right" 
+        <SheetContent
+          side="right"
           className="w-full sm:max-w-xl p-0 flex flex-col h-full border-l border-black/10 shadow-2xl"
         >
           <SheetHeader className="p-4 sm:p-6 border-b border-black/5 bg-white shrink-0">
@@ -113,12 +113,12 @@ export function ProjectsKanban({ data }: ProjectsKanbanProps) {
                   Project Checklist
                 </SheetTitle>
                 <SheetDescription className="text-[10px] sm:text-xs font-medium text-black/50 truncate">
-                   {selectedProject?.name} • PO: {selectedProject?.productionOrder}
+                  {selectedProject?.name} • PO: {selectedProject?.productionOrder}
                 </SheetDescription>
               </div>
             </div>
           </SheetHeader>
-          
+
           <div className="flex-1 overflow-hidden">
             <ScrollArea className="h-full">
               <div className="p-4 sm:p-6">
@@ -135,40 +135,60 @@ export function ProjectsKanban({ data }: ProjectsKanbanProps) {
 }
 
 function ProjectCard({ project, onClick }: { project: Project, onClick: () => void }) {
+  console.log('[DEBUG] Project Card Data:', project.name, { 
+    WO: project.productionOrder, 
+    Line: project.line, 
+    PL: project.plNumber,
+    Product: project.product 
+  })
   const { completed, total } = useMemo(() => calculateProgress(project.checklist), [project.checklist])
   const progressPercent = total > 0 ? Math.round((completed / total) * 100) : 0
 
   return (
-    <div 
+    <div
       className={cn(
         'group relative flex flex-col gap-3 rounded-xl border p-4 shadow-sm transition-all hover:border-black/50 hover:shadow-md cursor-pointer',
+        'border-2 border-orange-500', // EMERGENCY MARKER: SHOULD BE ORANGE
         projectRowColors.get(project.status) || 'bg-white'
       )}
       onClick={onClick}
     >
+      <div className='absolute -top-2 -right-2 bg-orange-500 text-white text-[8px] px-1 rounded font-bold z-10'>v2.0</div>
       <div className='flex flex-col gap-1'>
         <div className='flex items-center justify-between gap-2'>
           <div className='flex items-center gap-2'>
             <Package className='size-3.5 text-black/70' />
-            <span className='text-[10px] font-bold text-black uppercase tracking-wider'>PO: {project.productionOrder}</span>
+            <span className='text-[10px] font-bold text-black uppercase tracking-wider'>
+              WO: {project.productionOrder || project.workOrder || 'N/A'}
+            </span>
           </div>
-          <Badge variant='outline' className='text-[9px] h-4 px-1 opacity-70 border-black/20 text-black'>{project.product}</Badge>
+          <Badge variant='outline' className='text-[9px] h-4 px-1 opacity-70 border-black/20 text-black'>
+            {project.product || 'No Product'}
+          </Badge>
         </div>
         <h4 className='font-semibold text-sm leading-tight text-foreground truncate'>
           {project.name}
         </h4>
-        {project.drawing && (
-          <div className='flex items-center gap-1.5 mt-0.5'>
-            <FileText className='size-3.5 text-blue-600/70' />
-            <span className='text-[10px] font-bold text-black/60 uppercase tracking-wider'>Drawing: {project.drawing}</span>
+        <div className='flex flex-col gap-1 mt-1'>
+          {project.drawing && (
+            <div className='flex items-center gap-1.5'>
+              <FileText className='size-3 text-blue-600/70' />
+              <span className='text-[9px] font-bold text-black/60 uppercase tracking-wider'>{project.drawing}</span>
+            </div>
+          )}
+          <div className='flex items-center gap-1.5'>
+            <span className='text-[9px] font-bold text-black/60 uppercase tracking-wider'>Line: {project.line || '—'}</span>
           </div>
-        )}
+          <div className='flex items-center gap-1.5'>
+            <span className='text-[9px] font-bold text-black/60 uppercase tracking-wider'>Building #: {project.plNumber || '—'}</span>
+          </div>
+        </div>
       </div>
 
       <div className='flex flex-col gap-1.5'>
         <div className='flex items-center justify-between text-[11px] text-muted-foreground'>
           <span className='flex items-center gap-1.5'>
-             SO: <span className='text-foreground font-medium'>{project.salesOrder}</span>
+            SO: <span className='text-foreground font-medium'>{project.salesOrder}</span>
           </span>
           {project.productionStart && (
             <span className='flex items-center gap-1.5'>
@@ -178,7 +198,7 @@ function ProjectCard({ project, onClick }: { project: Project, onClick: () => vo
             </span>
           )}
         </div>
-        
+
         {project.checklistId && (
           <div className='pt-2 space-y-1.5'>
             <div className='flex items-center justify-between text-[10px]'>
@@ -186,7 +206,7 @@ function ProjectCard({ project, onClick }: { project: Project, onClick: () => vo
               <span className='font-bold text-black'>{completed}/{total}</span>
             </div>
             <div className='w-full h-1.5 bg-black/[0.05] rounded-full overflow-hidden'>
-              <div 
+              <div
                 className='h-full bg-black transition-all duration-500 ease-in-out'
                 style={{ width: `${progressPercent}%` }}
               />

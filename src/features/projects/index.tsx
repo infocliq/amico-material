@@ -43,7 +43,7 @@ export function Projects() {
     syncStatus === 'error'    ? `Sync failed: ${lastError}` :
     lastResult
       ? `Last sync: ${lastResult.lastSyncAt.toLocaleTimeString()}`
-      : 'Auto-sync every 10 min'
+      : 'Auto-sync every 5 min'
 
   return (
     <>

@@ -96,7 +96,8 @@ export async function syncSheetToFirestore(): Promise<SyncResult> {
           status: 'none',
           assignee: '',
           tasks: [],
-          workOrder: '', // keep legacy field empty or map it if needed
+          productionOrder: row.productionOrder,
+          workOrder: row.productionOrder, // SYNC TO BOTH FIELDS
         } as any)
         created++
       } else {
@@ -111,6 +112,7 @@ export async function syncSheetToFirestore(): Promise<SyncResult> {
         }
 
         check('productionOrder', row.productionOrder)
+        check('workOrder', row.productionOrder)
         check('name', row.name)
         check('product', row.product)
         check('supervisors', row.supervisors)

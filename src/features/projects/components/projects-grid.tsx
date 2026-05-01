@@ -128,8 +128,8 @@ function ProjectCard({ project }: { project: Project }) {
         {/* Header */}
         <div className='flex items-start justify-between'>
           <div className='space-y-0.5 min-w-0'>
-            <p className='text-sm font-medium text-foreground truncate uppercase tracking-wider text-[10px] opacity-70'>{project.product}</p>
-            <p className='text-xs text-muted-foreground truncate'>Web Development</p>
+            <p className='text-sm font-medium text-foreground truncate uppercase tracking-wider text-[10px] opacity-70'>{project.product || 'No Product'}</p>
+            <p className='text-xs text-muted-foreground truncate'>WO: {project.productionOrder || project.workOrder || 'N/A'}</p>
             <h4 className='text-base font-semibold text-foreground truncate group-hover:text-primary transition-colors'>{project.name}</h4>
             <div className='flex items-center gap-1 text-xs text-muted-foreground'>
               <MapPin className='w-3 h-3' />
@@ -145,6 +145,14 @@ function ProjectCard({ project }: { project: Project }) {
               >
                 {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
               </Badge>
+            </div>
+            <div className='mt-2 flex flex-col gap-1 text-[11px] text-muted-foreground uppercase font-medium'>
+               <div className='flex items-center gap-1.5'>
+                 <span className='opacity-60'>Line:</span> <span>{project.line || '—'}</span>
+               </div>
+               <div className='flex items-center gap-1.5'>
+                 <span className='opacity-60'>Building #:</span> <span>{project.plNumber || '—'}</span>
+               </div>
             </div>
           </div>
 
