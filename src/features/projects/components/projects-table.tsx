@@ -62,7 +62,7 @@ export function ProjectsTable({ data, search, navigate }: DataTableProps) {
   } = useTableUrlState({
     search,
     navigate,
-    pagination: { defaultPage: 1, defaultPageSize: 10000 },
+    pagination: { defaultPage: 1, defaultPageSize: 50 },
     globalFilter: { enabled: true },
     columnFilters: [],
   })
@@ -206,6 +206,7 @@ export function ProjectsTable({ data, search, navigate }: DataTableProps) {
           </TableBody>
         </Table>
       </div>
+      <DataTablePagination table={table} />
       <DataTableBulkActions table={table} />
     </div>
   )

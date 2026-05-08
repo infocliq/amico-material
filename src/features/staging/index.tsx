@@ -11,6 +11,7 @@ import {
   FileText
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
@@ -52,17 +53,17 @@ const calculateProgress = (checklist: any) => {
     const groups = dept.groups || []
     if (groups.length === 0) {
       total++
-      if (dept.isChecked) completed++
+      if (dept.isStaged) completed++
     } else {
       groups.forEach((group: any) => {
         const items = group.items || []
         if (items.length === 0) {
           total++
-          if (group.isChecked) completed++
+          if (group.isStaged) completed++
         } else {
           items.forEach((item: any) => {
             total++
-            if (item.isChecked) completed++
+            if (item.isStaged) completed++
           })
         }
       })
@@ -185,26 +186,34 @@ function StagingContent() {
                           setOpen('edit')
                         }}
                         className={cn(
-                          'group relative flex flex-col gap-2 rounded-xl border p-4 shadow-none transition-all hover:border-primary/50 cursor-pointer',
+                          'group relative flex flex-col gap-3 rounded-xl border p-4 shadow-sm transition-all hover:border-black/50 hover:shadow-md cursor-pointer',
+                          'border border-orange-500',
                           projectRowColors.get(item.status) || 'bg-card'
                         )}
                       >
-                        <div className='flex items-start justify-between gap-2'>
-                          <div className='flex items-center gap-2 min-w-0'>
-                            <span className={cn('size-2 shrink-0 rounded-full',
-                              item.priority === 'urgent' ? 'bg-red-500' :
-                                item.priority === 'high' ? 'bg-amber-500' :
-                                  item.priority === 'medium' ? 'bg-blue-500' : 'bg-slate-400'
-                            )} />
-                            <h4 className={cn('font-semibold text-sm leading-tight truncate',
-                              item.status === 'done' ? 'text-muted-foreground line-through opacity-60' : 'text-foreground'
-                            )}>
-                              {item.title}
-                            </h4>
+                        <div className='flex flex-col gap-1'>
+                          <div className='flex items-center justify-between gap-2'>
+                            <div className='flex items-center gap-2 min-w-0'>
+                              <span className={cn('size-2 shrink-0 rounded-full',
+                                item.priority === 'urgent' ? 'bg-red-500' :
+                                  item.priority === 'high' ? 'bg-amber-500' :
+                                    item.priority === 'medium' ? 'bg-blue-500' : 'bg-slate-400'
+                              )} />
+                              <h4 className={cn('font-bold text-[10px] text-black uppercase tracking-wider truncate',
+                                item.status === 'done' ? 'text-muted-foreground line-through opacity-60' : 'text-black'
+                              )}>
+                                TICKET: {item.id.slice(0, 8).toUpperCase()}
+                              </h4>
+                            </div>
+                            <Badge variant='outline' className='text-[9px] h-4 px-1 opacity-70 border-black/20 text-black capitalize'>
+                              {item.priority}
+                            </Badge>
                           </div>
-                        </div>
-                        <div className={cn('flex flex-col gap-2', item.status === 'done' && 'opacity-60')}>
-                          <span className='font-mono text-[10px] text-muted-foreground uppercase'>ID: {item.id.slice(0, 6)}</span>
+                          <h4 className={cn('font-semibold text-sm leading-tight text-foreground truncate mt-1',
+                            item.status === 'done' && 'text-muted-foreground line-through opacity-60'
+                          )}>
+                            {item.title}
+                          </h4>
                         </div>
                       </div>
                     ) : (
@@ -273,50 +282,72 @@ function ProjectItemCard({ item, onClick }: { item: any, onClick: () => void }) 
     <div
       onClick={onClick}
       className={cn(
-        'group relative flex flex-col gap-2 rounded-xl border p-4 shadow-none transition-all hover:border-primary cursor-pointer',
+        'group relative flex flex-col gap-3 rounded-xl border border-black/10 p-4 shadow-sm transition-all hover:border-black/30 hover:shadow-md cursor-pointer',
         projectRowColors.get(item.status) || 'bg-white'
       )}
     >
-       <div className='flex items-center justify-between mb-1'>
+      <div className='flex flex-col gap-1'>
+        <div className='flex items-center justify-between gap-2'>
           <div className='flex items-center gap-2'>
-             <Package className='size-3.5 text-primary' />
-             <span className='text-[10px] font-bold text-primary uppercase tracking-wider'>WO: {item.workOrder}</span>
+            <Package className='size-3.5 text-black/70' />
+            <span className='text-[10px] font-bold text-black uppercase tracking-wider'>
+              WO: {item.productionOrder || item.workOrder || 'N/A'}
+            </span>
           </div>
-          <span className='text-[9px] px-1 bg-primary/20 text-primary border border-primary/20 rounded h-3.5 flex items-center'>{item.productType}</span>
-       </div>
-       <h4 className={cn('font-semibold text-sm leading-tight text-foreground truncate',
+          <Badge variant='outline' className='text-[9px] h-4 px-1 opacity-70 border-black/20 text-black'>
+            {item.productType || item.product || 'No Product'}
+          </Badge>
+        </div>
+        <h4 className={cn('font-semibold text-sm leading-tight text-foreground truncate',
           item.status === 'done' && 'text-muted-foreground line-through opacity-60'
-       )}>
+        )}>
           {item.name}
-       </h4>
-       {item.drawing && (
-          <div className='flex items-center gap-1.5 mt-0.5'>
-            <FileText className='size-3.5 text-blue-600/70' />
-            <span className='text-[10px] font-bold text-black/60 uppercase tracking-wider'>Drawing: {item.drawing}</span>
+        </h4>
+        <div className='flex flex-col gap-1 mt-1'>
+          {item.drawing && (
+            <div className='flex items-center gap-1.5'>
+              <FileText className='size-3 text-blue-600/70' />
+              <span className='text-[9px] font-bold text-black/60 uppercase tracking-wider'>{item.drawing}</span>
+            </div>
+          )}
+          <div className='flex items-center gap-1.5'>
+            <span className='text-[9px] font-bold text-black/60 uppercase tracking-wider'>Line: {item.line || '—'}</span>
           </div>
-       )}
-       <div className='flex items-center justify-between mt-1 text-[10px] text-muted-foreground'>
-          <span>Qty: <span className='text-foreground font-medium'>{item.quantity}</span></span>
+          <div className='flex items-center gap-1.5'>
+            <span className='text-[9px] font-bold text-black/60 uppercase tracking-wider'>Building #: {item.plNumber || '—'}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className='flex flex-col gap-1.5'>
+        <div className='flex items-center justify-between text-[11px] text-muted-foreground'>
+          <span className='flex items-center gap-1.5'>
+            SO: <span className='text-foreground font-medium'>{item.salesOrder || '—'}</span>
+          </span>
           {item.productionStart && (
-            <span>
-              Start: {new Intl.DateTimeFormat('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).format(new Date(item.productionStart))}
+            <span className='flex items-center gap-1.5'>
+              Start: <span className='text-foreground font-medium'>
+                {new Intl.DateTimeFormat('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).format(new Date(item.productionStart))}
+              </span>
             </span>
           )}
-       </div>
-       {item.checklistId && (
+        </div>
+
+        {item.checklistId && (
           <div className='pt-2 space-y-1.5'>
-            <div className='flex items-center justify-between text-[9px]'>
-              <span className='font-bold text-primary/60'>PARTS CHECKLIST STATUS</span>
-              <span className='font-bold text-primary'>{completed}/{total}</span>
+            <div className='flex items-center justify-between text-[10px]'>
+              <span className='font-bold text-black/60'>PARTS CHECKLIST STATUS</span>
+              <span className='font-bold text-black'>{completed}/{total}</span>
             </div>
-            <div className='w-full h-1.5 bg-primary/10 rounded-full overflow-hidden'>
-              <div 
-                className='h-full bg-primary transition-all duration-500 ease-in-out'
+            <div className='w-full h-1.5 bg-black/[0.05] rounded-full overflow-hidden'>
+              <div
+                className='h-full bg-black transition-all duration-500 ease-in-out'
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
           </div>
-       )}
+        )}
+      </div>
     </div>
   )
 }

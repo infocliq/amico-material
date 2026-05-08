@@ -30,6 +30,7 @@ import { Route as AuthenticatedStagingIndexRouteImport } from './routes/_authent
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedRolesIndexRouteImport } from './routes/_authenticated/roles/index'
 import { Route as AuthenticatedProjectsIndexRouteImport } from './routes/_authenticated/projects/index'
+import { Route as AuthenticatedKittingIndexRouteImport } from './routes/_authenticated/kitting/index'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedChecklistIndexRouteImport } from './routes/_authenticated/checklist/index'
 import { Route as ClerkAuthenticatedUserManagementRouteImport } from './routes/clerk/_authenticated/user-management'
@@ -44,6 +45,15 @@ import { Route as AuthenticatedProjectsCreateRouteImport } from './routes/_authe
 import { Route as AuthenticatedProjectsProjectIdRouteImport } from './routes/_authenticated/projects/$projectId'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 import { Route as AuthenticatedChecklistCreateRouteImport } from './routes/_authenticated/checklist/create'
+import { Route as AuthenticatedKittingWorkordersIndexRouteImport } from './routes/_authenticated/kitting/workorders/index'
+import { Route as AuthenticatedKittingStorageIndexRouteImport } from './routes/_authenticated/kitting/storage/index'
+import { Route as AuthenticatedKittingReceiveIndexRouteImport } from './routes/_authenticated/kitting/receive/index'
+import { Route as AuthenticatedKittingProjectsIndexRouteImport } from './routes/_authenticated/kitting/projects/index'
+import { Route as AuthenticatedKittingPicklistIndexRouteImport } from './routes/_authenticated/kitting/picklist/index'
+import { Route as AuthenticatedKittingLabelsIndexRouteImport } from './routes/_authenticated/kitting/labels/index'
+import { Route as AuthenticatedKittingIssueIndexRouteImport } from './routes/_authenticated/kitting/issue/index'
+import { Route as AuthenticatedKittingInventoryIndexRouteImport } from './routes/_authenticated/kitting/inventory/index'
+import { Route as AuthenticatedKittingAuditIndexRouteImport } from './routes/_authenticated/kitting/audit/index'
 import { Route as AuthenticatedChecklistIdIndexRouteImport } from './routes/_authenticated/checklist/$id/index'
 import { Route as AuthenticatedProjectsProjectIdEditRouteImport } from './routes/_authenticated/projects/$projectId.edit'
 import { Route as AuthenticatedChecklistIdEditRouteImport } from './routes/_authenticated/checklist/$id/edit'
@@ -154,6 +164,12 @@ const AuthenticatedProjectsIndexRoute =
     path: '/projects/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedKittingIndexRoute =
+  AuthenticatedKittingIndexRouteImport.update({
+    id: '/kitting/',
+    path: '/kitting/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedHelpCenterIndexRoute =
   AuthenticatedHelpCenterIndexRouteImport.update({
     id: '/help-center/',
@@ -236,6 +252,60 @@ const AuthenticatedChecklistCreateRoute =
     path: '/checklist/create',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedKittingWorkordersIndexRoute =
+  AuthenticatedKittingWorkordersIndexRouteImport.update({
+    id: '/kitting/workorders/',
+    path: '/kitting/workorders/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedKittingStorageIndexRoute =
+  AuthenticatedKittingStorageIndexRouteImport.update({
+    id: '/kitting/storage/',
+    path: '/kitting/storage/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedKittingReceiveIndexRoute =
+  AuthenticatedKittingReceiveIndexRouteImport.update({
+    id: '/kitting/receive/',
+    path: '/kitting/receive/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedKittingProjectsIndexRoute =
+  AuthenticatedKittingProjectsIndexRouteImport.update({
+    id: '/kitting/projects/',
+    path: '/kitting/projects/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedKittingPicklistIndexRoute =
+  AuthenticatedKittingPicklistIndexRouteImport.update({
+    id: '/kitting/picklist/',
+    path: '/kitting/picklist/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedKittingLabelsIndexRoute =
+  AuthenticatedKittingLabelsIndexRouteImport.update({
+    id: '/kitting/labels/',
+    path: '/kitting/labels/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedKittingIssueIndexRoute =
+  AuthenticatedKittingIssueIndexRouteImport.update({
+    id: '/kitting/issue/',
+    path: '/kitting/issue/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedKittingInventoryIndexRoute =
+  AuthenticatedKittingInventoryIndexRouteImport.update({
+    id: '/kitting/inventory/',
+    path: '/kitting/inventory/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedKittingAuditIndexRoute =
+  AuthenticatedKittingAuditIndexRouteImport.update({
+    id: '/kitting/audit/',
+    path: '/kitting/audit/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedChecklistIdIndexRoute =
   AuthenticatedChecklistIdIndexRouteImport.update({
     id: '/checklist/$id/',
@@ -283,6 +353,7 @@ export interface FileRoutesByFullPath {
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
   '/checklist/': typeof AuthenticatedChecklistIndexRoute
   '/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/kitting/': typeof AuthenticatedKittingIndexRoute
   '/projects/': typeof AuthenticatedProjectsIndexRoute
   '/roles/': typeof AuthenticatedRolesIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
@@ -291,6 +362,15 @@ export interface FileRoutesByFullPath {
   '/checklist/$id/edit': typeof AuthenticatedChecklistIdEditRoute
   '/projects/$projectId/edit': typeof AuthenticatedProjectsProjectIdEditRoute
   '/checklist/$id/': typeof AuthenticatedChecklistIdIndexRoute
+  '/kitting/audit/': typeof AuthenticatedKittingAuditIndexRoute
+  '/kitting/inventory/': typeof AuthenticatedKittingInventoryIndexRoute
+  '/kitting/issue/': typeof AuthenticatedKittingIssueIndexRoute
+  '/kitting/labels/': typeof AuthenticatedKittingLabelsIndexRoute
+  '/kitting/picklist/': typeof AuthenticatedKittingPicklistIndexRoute
+  '/kitting/projects/': typeof AuthenticatedKittingProjectsIndexRoute
+  '/kitting/receive/': typeof AuthenticatedKittingReceiveIndexRoute
+  '/kitting/storage/': typeof AuthenticatedKittingStorageIndexRoute
+  '/kitting/workorders/': typeof AuthenticatedKittingWorkordersIndexRoute
 }
 export interface FileRoutesByTo {
   '/clerk': typeof ClerkAuthenticatedRouteRouteWithChildren
@@ -319,6 +399,7 @@ export interface FileRoutesByTo {
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
   '/checklist': typeof AuthenticatedChecklistIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/kitting': typeof AuthenticatedKittingIndexRoute
   '/projects': typeof AuthenticatedProjectsIndexRoute
   '/roles': typeof AuthenticatedRolesIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
@@ -327,6 +408,15 @@ export interface FileRoutesByTo {
   '/checklist/$id/edit': typeof AuthenticatedChecklistIdEditRoute
   '/projects/$projectId/edit': typeof AuthenticatedProjectsProjectIdEditRoute
   '/checklist/$id': typeof AuthenticatedChecklistIdIndexRoute
+  '/kitting/audit': typeof AuthenticatedKittingAuditIndexRoute
+  '/kitting/inventory': typeof AuthenticatedKittingInventoryIndexRoute
+  '/kitting/issue': typeof AuthenticatedKittingIssueIndexRoute
+  '/kitting/labels': typeof AuthenticatedKittingLabelsIndexRoute
+  '/kitting/picklist': typeof AuthenticatedKittingPicklistIndexRoute
+  '/kitting/projects': typeof AuthenticatedKittingProjectsIndexRoute
+  '/kitting/receive': typeof AuthenticatedKittingReceiveIndexRoute
+  '/kitting/storage': typeof AuthenticatedKittingStorageIndexRoute
+  '/kitting/workorders': typeof AuthenticatedKittingWorkordersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -360,6 +450,7 @@ export interface FileRoutesById {
   '/clerk/_authenticated/user-management': typeof ClerkAuthenticatedUserManagementRoute
   '/_authenticated/checklist/': typeof AuthenticatedChecklistIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/_authenticated/kitting/': typeof AuthenticatedKittingIndexRoute
   '/_authenticated/projects/': typeof AuthenticatedProjectsIndexRoute
   '/_authenticated/roles/': typeof AuthenticatedRolesIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
@@ -368,6 +459,15 @@ export interface FileRoutesById {
   '/_authenticated/checklist/$id/edit': typeof AuthenticatedChecklistIdEditRoute
   '/_authenticated/projects/$projectId/edit': typeof AuthenticatedProjectsProjectIdEditRoute
   '/_authenticated/checklist/$id/': typeof AuthenticatedChecklistIdIndexRoute
+  '/_authenticated/kitting/audit/': typeof AuthenticatedKittingAuditIndexRoute
+  '/_authenticated/kitting/inventory/': typeof AuthenticatedKittingInventoryIndexRoute
+  '/_authenticated/kitting/issue/': typeof AuthenticatedKittingIssueIndexRoute
+  '/_authenticated/kitting/labels/': typeof AuthenticatedKittingLabelsIndexRoute
+  '/_authenticated/kitting/picklist/': typeof AuthenticatedKittingPicklistIndexRoute
+  '/_authenticated/kitting/projects/': typeof AuthenticatedKittingProjectsIndexRoute
+  '/_authenticated/kitting/receive/': typeof AuthenticatedKittingReceiveIndexRoute
+  '/_authenticated/kitting/storage/': typeof AuthenticatedKittingStorageIndexRoute
+  '/_authenticated/kitting/workorders/': typeof AuthenticatedKittingWorkordersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -399,6 +499,7 @@ export interface FileRouteTypes {
     | '/clerk/user-management'
     | '/checklist/'
     | '/help-center/'
+    | '/kitting/'
     | '/projects/'
     | '/roles/'
     | '/settings/'
@@ -407,6 +508,15 @@ export interface FileRouteTypes {
     | '/checklist/$id/edit'
     | '/projects/$projectId/edit'
     | '/checklist/$id/'
+    | '/kitting/audit/'
+    | '/kitting/inventory/'
+    | '/kitting/issue/'
+    | '/kitting/labels/'
+    | '/kitting/picklist/'
+    | '/kitting/projects/'
+    | '/kitting/receive/'
+    | '/kitting/storage/'
+    | '/kitting/workorders/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/clerk'
@@ -435,6 +545,7 @@ export interface FileRouteTypes {
     | '/clerk/user-management'
     | '/checklist'
     | '/help-center'
+    | '/kitting'
     | '/projects'
     | '/roles'
     | '/settings'
@@ -443,6 +554,15 @@ export interface FileRouteTypes {
     | '/checklist/$id/edit'
     | '/projects/$projectId/edit'
     | '/checklist/$id'
+    | '/kitting/audit'
+    | '/kitting/inventory'
+    | '/kitting/issue'
+    | '/kitting/labels'
+    | '/kitting/picklist'
+    | '/kitting/projects'
+    | '/kitting/receive'
+    | '/kitting/storage'
+    | '/kitting/workorders'
   id:
     | '__root__'
     | '/_authenticated'
@@ -475,6 +595,7 @@ export interface FileRouteTypes {
     | '/clerk/_authenticated/user-management'
     | '/_authenticated/checklist/'
     | '/_authenticated/help-center/'
+    | '/_authenticated/kitting/'
     | '/_authenticated/projects/'
     | '/_authenticated/roles/'
     | '/_authenticated/settings/'
@@ -483,6 +604,15 @@ export interface FileRouteTypes {
     | '/_authenticated/checklist/$id/edit'
     | '/_authenticated/projects/$projectId/edit'
     | '/_authenticated/checklist/$id/'
+    | '/_authenticated/kitting/audit/'
+    | '/_authenticated/kitting/inventory/'
+    | '/_authenticated/kitting/issue/'
+    | '/_authenticated/kitting/labels/'
+    | '/_authenticated/kitting/picklist/'
+    | '/_authenticated/kitting/projects/'
+    | '/_authenticated/kitting/receive/'
+    | '/_authenticated/kitting/storage/'
+    | '/_authenticated/kitting/workorders/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -649,6 +779,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProjectsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/kitting/': {
+      id: '/_authenticated/kitting/'
+      path: '/kitting'
+      fullPath: '/kitting/'
+      preLoaderRoute: typeof AuthenticatedKittingIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/help-center/': {
       id: '/_authenticated/help-center/'
       path: '/help-center'
@@ -747,6 +884,69 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedChecklistCreateRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/kitting/workorders/': {
+      id: '/_authenticated/kitting/workorders/'
+      path: '/kitting/workorders'
+      fullPath: '/kitting/workorders/'
+      preLoaderRoute: typeof AuthenticatedKittingWorkordersIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/kitting/storage/': {
+      id: '/_authenticated/kitting/storage/'
+      path: '/kitting/storage'
+      fullPath: '/kitting/storage/'
+      preLoaderRoute: typeof AuthenticatedKittingStorageIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/kitting/receive/': {
+      id: '/_authenticated/kitting/receive/'
+      path: '/kitting/receive'
+      fullPath: '/kitting/receive/'
+      preLoaderRoute: typeof AuthenticatedKittingReceiveIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/kitting/projects/': {
+      id: '/_authenticated/kitting/projects/'
+      path: '/kitting/projects'
+      fullPath: '/kitting/projects/'
+      preLoaderRoute: typeof AuthenticatedKittingProjectsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/kitting/picklist/': {
+      id: '/_authenticated/kitting/picklist/'
+      path: '/kitting/picklist'
+      fullPath: '/kitting/picklist/'
+      preLoaderRoute: typeof AuthenticatedKittingPicklistIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/kitting/labels/': {
+      id: '/_authenticated/kitting/labels/'
+      path: '/kitting/labels'
+      fullPath: '/kitting/labels/'
+      preLoaderRoute: typeof AuthenticatedKittingLabelsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/kitting/issue/': {
+      id: '/_authenticated/kitting/issue/'
+      path: '/kitting/issue'
+      fullPath: '/kitting/issue/'
+      preLoaderRoute: typeof AuthenticatedKittingIssueIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/kitting/inventory/': {
+      id: '/_authenticated/kitting/inventory/'
+      path: '/kitting/inventory'
+      fullPath: '/kitting/inventory/'
+      preLoaderRoute: typeof AuthenticatedKittingInventoryIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/kitting/audit/': {
+      id: '/_authenticated/kitting/audit/'
+      path: '/kitting/audit'
+      fullPath: '/kitting/audit/'
+      preLoaderRoute: typeof AuthenticatedKittingAuditIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/checklist/$id/': {
       id: '/_authenticated/checklist/$id/'
       path: '/checklist/$id'
@@ -819,12 +1019,22 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedRolesRoleIdRoute: typeof AuthenticatedRolesRoleIdRoute
   AuthenticatedChecklistIndexRoute: typeof AuthenticatedChecklistIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedKittingIndexRoute: typeof AuthenticatedKittingIndexRoute
   AuthenticatedProjectsIndexRoute: typeof AuthenticatedProjectsIndexRoute
   AuthenticatedRolesIndexRoute: typeof AuthenticatedRolesIndexRoute
   AuthenticatedStagingIndexRoute: typeof AuthenticatedStagingIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
   AuthenticatedChecklistIdEditRoute: typeof AuthenticatedChecklistIdEditRoute
   AuthenticatedChecklistIdIndexRoute: typeof AuthenticatedChecklistIdIndexRoute
+  AuthenticatedKittingAuditIndexRoute: typeof AuthenticatedKittingAuditIndexRoute
+  AuthenticatedKittingInventoryIndexRoute: typeof AuthenticatedKittingInventoryIndexRoute
+  AuthenticatedKittingIssueIndexRoute: typeof AuthenticatedKittingIssueIndexRoute
+  AuthenticatedKittingLabelsIndexRoute: typeof AuthenticatedKittingLabelsIndexRoute
+  AuthenticatedKittingPicklistIndexRoute: typeof AuthenticatedKittingPicklistIndexRoute
+  AuthenticatedKittingProjectsIndexRoute: typeof AuthenticatedKittingProjectsIndexRoute
+  AuthenticatedKittingReceiveIndexRoute: typeof AuthenticatedKittingReceiveIndexRoute
+  AuthenticatedKittingStorageIndexRoute: typeof AuthenticatedKittingStorageIndexRoute
+  AuthenticatedKittingWorkordersIndexRoute: typeof AuthenticatedKittingWorkordersIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -838,12 +1048,26 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedRolesRoleIdRoute: AuthenticatedRolesRoleIdRoute,
   AuthenticatedChecklistIndexRoute: AuthenticatedChecklistIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
+  AuthenticatedKittingIndexRoute: AuthenticatedKittingIndexRoute,
   AuthenticatedProjectsIndexRoute: AuthenticatedProjectsIndexRoute,
   AuthenticatedRolesIndexRoute: AuthenticatedRolesIndexRoute,
   AuthenticatedStagingIndexRoute: AuthenticatedStagingIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
   AuthenticatedChecklistIdEditRoute: AuthenticatedChecklistIdEditRoute,
   AuthenticatedChecklistIdIndexRoute: AuthenticatedChecklistIdIndexRoute,
+  AuthenticatedKittingAuditIndexRoute: AuthenticatedKittingAuditIndexRoute,
+  AuthenticatedKittingInventoryIndexRoute:
+    AuthenticatedKittingInventoryIndexRoute,
+  AuthenticatedKittingIssueIndexRoute: AuthenticatedKittingIssueIndexRoute,
+  AuthenticatedKittingLabelsIndexRoute: AuthenticatedKittingLabelsIndexRoute,
+  AuthenticatedKittingPicklistIndexRoute:
+    AuthenticatedKittingPicklistIndexRoute,
+  AuthenticatedKittingProjectsIndexRoute:
+    AuthenticatedKittingProjectsIndexRoute,
+  AuthenticatedKittingReceiveIndexRoute: AuthenticatedKittingReceiveIndexRoute,
+  AuthenticatedKittingStorageIndexRoute: AuthenticatedKittingStorageIndexRoute,
+  AuthenticatedKittingWorkordersIndexRoute:
+    AuthenticatedKittingWorkordersIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

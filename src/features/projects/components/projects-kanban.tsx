@@ -38,17 +38,17 @@ const calculateProgress = (checklist: any) => {
     const groups = dept.groups || []
     if (groups.length === 0) {
       total++
-      if (dept.isChecked) completed++
+      if (dept.isStaged) completed++
     } else {
       groups.forEach((group: any) => {
         const items = group.items || []
         if (items.length === 0) {
           total++
-          if (group.isChecked) completed++
+          if (group.isStaged) completed++
         } else {
           items.forEach((item: any) => {
             total++
-            if (item.isChecked) completed++
+            if (item.isStaged) completed++
           })
         }
       })
@@ -148,7 +148,7 @@ function ProjectCard({ project, onClick }: { project: Project, onClick: () => vo
     <div
       className={cn(
         'group relative flex flex-col gap-3 rounded-xl border p-4 shadow-sm transition-all hover:border-black/50 hover:shadow-md cursor-pointer',
-        'border-2 border-orange-500', // EMERGENCY MARKER: SHOULD BE ORANGE
+        'border border-orange-500', // EMERGENCY MARKER: SHOULD BE ORANGE
         projectRowColors.get(project.status) || 'bg-white'
       )}
       onClick={onClick}

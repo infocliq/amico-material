@@ -14,6 +14,15 @@ import {
   Folder,
   Activity,
   ClipboardList,
+  PackagePlus,
+  Boxes,
+  Map,
+  ListChecks,
+  LogOut,
+  History,
+  FolderOpen,
+  ClipboardCheck,
+  Printer,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 

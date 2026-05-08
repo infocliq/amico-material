@@ -12,11 +12,11 @@ export interface UseGoogleSheetSyncReturn {
   syncNow: () => void
 }
 
-const SYNC_INTERVAL_MS = 5 * 60 * 1000    // 5 minutes
+const SYNC_INTERVAL_MS = 20 * 60 * 1000    // 20 minutes
 const SUCCESS_RESET_MS = 8_000             // revert badge back to "idle" after 8 s
 
 /**
- * Runs a Google Sheets → Firestore sync on mount and then every 5 minutes.
+ * Runs a Google Sheets → Firestore sync every 20 minutes.
  * Exposes status, last result, and a manual trigger.
  */
 export function useGoogleSheetSync(): UseGoogleSheetSyncReturn {
@@ -60,10 +60,8 @@ export function useGoogleSheetSync(): UseGoogleSheetSyncReturn {
     }
   }, [queryClient])
 
-  // Run immediately on mount, then repeat every 10 min
+  // Repeat every 20 min (no run on mount as requested)
   useEffect(() => {
-    runSync()
-
     const interval = setInterval(runSync, SYNC_INTERVAL_MS)
 
     return () => {

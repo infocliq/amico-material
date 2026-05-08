@@ -43,7 +43,7 @@ export function Projects() {
     syncStatus === 'error'    ? `Sync failed: ${lastError}` :
     lastResult
       ? `Last sync: ${lastResult.lastSyncAt.toLocaleTimeString()}`
-      : 'Auto-sync every 5 min'
+      : 'Auto-sync every 20 min'
 
   return (
     <>
@@ -91,7 +91,7 @@ export function Projects() {
                 <TooltipContent side='bottom' className='max-w-[240px] text-xs'>
                   {syncStatus === 'error'
                     ? lastError
-                    : 'Google Sheets auto-syncs every 10 min. Click to sync now.'}
+                    : 'Google Sheets auto-syncs every 20 min. Click to sync now.'}
                   {lastResult && syncStatus !== 'error' && (
                     <span className='block mt-1 opacity-70'>
                       {lastResult.created} created · {lastResult.updated} updated · {lastResult.unchanged} unchanged · {lastResult.skipped} skipped
